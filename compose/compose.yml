@@ -1,0 +1,75 @@
+version: "2"
+networks:
+  nextcloud:
+  onlyoffice:
+    external: true
+    name: onlyoffice
+  collabora:
+    external: true
+    name: collabora
+  proxy:
+    external: true
+    name: proxy
+services:
+  nextcloud:
+    image: linuxserver/nextcloud
+    networks:
+    - proxy
+    - collabora 
+    - onlyoffice
+    - nextcloud
+    container_name: ${ORG_NAME}_${STACK_NAME}_nextcloud
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-27}
+      - TZ={TZ:-Europe/Paris}
+    volumes:
+      - ${HOME}/srv/${ORG_NAME}/${STACK_NAME}/config:/config
+      - ${HOME}/srv/${ORG_NAME}/${STACK_NAME}/data:/data
+      - ${HOME}/srv/${ORG_NAME}/${STACK_NAME}/git/compose/custom:/custom-cont-init.d:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.${STACK_NAME}.entrypoints=websecure"
+      - "traefik.http.routers.${STACK_NAME}.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.${STACK_NAME}.tls=true"
+      - "traefik.http.services.${STACK_NAME}.loadbalancer.server.port=80"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.${STACK_NAME}.tls.certresolver=letsencrypt"
+    ports:
+      - ${NEXTCLOUD_HTTPS_PORT:-1115}:443
+      - ${NEXTCLOUD_HTTP_PORT:-1116}:80
+    depends_on:
+      - mariadb
+    restart: unless-stopped
+  mariadb:
+    image: linuxserver/mariadb
+    container_name: ${ORG_NAME}_${STACK_NAME}_mariadb
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-27}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-123456789}
+      - TZ=${TZ:-Europe/London}
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-nextcloud}
+      - MYSQL_USER=${MYSQL_USER:-nextcloud}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD:-123456789}
+    ports:
+      - ${MARIADB_PORT:-6606}:3306  
+    volumes:
+      - ${HOME}/srv/${ORG_NAME}/${STACK_NAME}/mariadb:/config
+    restart: unless-stopped
+  phpmyadmin:
+    image: linuxserver/phpmyadmin
+    container_name: ${ORG_NAME}_${STACK_NAME}_phpmyadmin
+    environment:
+      - PMA_ARBITRARY=${PMA_ARBITRARY:-1}
+      - PMA_HOST=mariadb
+      - PMA_PORT=3306
+    links:
+      - mariadb
+    ports:
+      - ${PMA_HTTP_PORT:-5559}:80
+    volumes:
+      - ${HOME}/srv/${ORG_NAME}/${STACK_NAME}/phpmyadmin:/config
+    restart: "no"
+    networks:
+      - nextcloud

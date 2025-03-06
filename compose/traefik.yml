@@ -1,0 +1,38 @@
+api:
+  dashboard: true # pour activer un tableau de bord
+  #insecure: true
+providers:
+  docker:
+    network: proxy # réseau de discussion entre les conteneurs et traefik
+    exposedByDefault: false # n'active pas les conteneurs par défaut sur le web
+  #file:
+    #filename: "/file.yml"
+    #watch: true
+  
+entryPoints:
+  web:
+    address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: websecure # pointe sur websecure plus bas (port 443 en somme)
+          scheme: https
+
+  websecure:
+    address: ":443"
+    http:
+      tls: # configuration par défaut
+        certResolver: letsencrypt # pointe sur la config. letsencrypt plus bas
+
+  traefik: # adresse pour le dashboard ;-)
+    address: ":8080"
+
+ping: {}
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: "hello@email.local"
+      storage: "/acme.json"
+      httpChallenge: # le type utilisé pour valider les certificats Let's Encrypt
+        entryPoint: web
