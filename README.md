@@ -18,7 +18,7 @@ secrets-manager -d
 
 # Launch containers
 cd compose
-podman compose up --detach nextcloud mariadb reverse-proxy
+podman compose up --detach reverse-proxy nextcloud mariadb
 ```
 ## Prerequisites
 ### (Optionnal) Terraform
