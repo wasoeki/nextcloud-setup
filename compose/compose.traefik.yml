@@ -4,6 +4,7 @@ services:
   reverse-proxy:
     # The official v3 Traefik docker image
     image: traefik:v3.3
+    # container_name: ${ORG_NAME}_${STACK_NAME}_traefik
     # Enables the web UI and tells Traefik to listen to docker
     command: --api.insecure=true --providers.docker
     ports:
