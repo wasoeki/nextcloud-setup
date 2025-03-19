@@ -32,7 +32,7 @@ ping: {}
 certificatesResolvers:
   letsencrypt:
     acme:
-      email: "hello@email.local"
+      email: "hello@sample.email"
       storage: "/acme.json"
       httpChallenge: # le type utilisé pour valider les certificats Let's Encrypt
         entryPoint: web

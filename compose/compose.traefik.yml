@@ -3,11 +3,11 @@ services:
     # The official v3 Traefik docker image
     image: traefik:v3.3
     # container_name: ${ORG_NAME}_${STACK_NAME}_traefik
+    environment:
+      - TRAEFIK_LETSENCRYPT_EMAIL=${TRAEFIK_LETSENCRYPT_EMAIL:-hello@example.email}
     # Enables the web UI and tells Traefik to listen to docker
     command: 
-      - '--api.insecure=true --providers.docker'
-      # moved from static conf to pass email as env var
-      - '--certificatesresolvers.letsencrypt.acme.email=${TRAEFIK_LETSENCRYPT_EMAIL}'
+      - '--api.insecure=true --providers.docker --certificatesresolvers.letsencrypt.acme.email=${TRAEFIK_LETSENCRYPT_EMAIL}'
     ports:
       # The HTTP port
       - "80:80"

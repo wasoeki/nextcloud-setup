@@ -21,7 +21,7 @@ services:
     environment:
       - PUID=${PUID:-1000}
       - PGID=${PGID:-27}
-      - TZ={TZ:-Europe/Paris}
+      - TZ=${TZ:-Europe/Paris}
     volumes:
       - ${HOME}/srv/${ORG_NAME}/${STACK_NAME}/config:/config
       - ${HOME}/srv/${ORG_NAME}/${STACK_NAME}/data:/data
