@@ -8,6 +8,12 @@ services:
     # Enables the web UI and tells Traefik to listen to docker
     command: 
       - '--api.insecure=true --providers.docker --certificatesresolvers.letsencrypt.acme.email=${TRAEFIK_LETSENCRYPT_EMAIL}'
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.mydashboard.rule=Host(`${TRAEFIK_DOMAIN}`)
+      - traefik.http.routers.mydashboard.service=api@internal
+      - traefik.http.routers.mydashboard.middlewares=myauth
+      - traefik.http.middlewares.myauth.basicauth.users=test:$$apr1$$H6uskkkW$$IgXLP6ewTrSuBkTrqE8wj/
     ports:
       # The HTTP port
       - "80:80"
