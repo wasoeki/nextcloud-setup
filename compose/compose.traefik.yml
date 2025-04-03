@@ -1,5 +1,11 @@
+networks:
+  proxy:
+    external: true
+    name: proxy
 services:
   reverse-proxy:
+    networks:
+      - proxy
     # The official v3 Traefik docker image
     image: traefik:v3.3
     # container_name: ${ORG_NAME}_${STACK_NAME}_traefik
