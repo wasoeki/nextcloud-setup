@@ -29,7 +29,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.${STACK_NAME}.entrypoints=websecure"
-      - "traefik.http.routers.${STACK_NAME}.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.${STACK_NAME}.rule=Host(`${DOMAIN}`)${ADDITIONAL_DOMAINS}"
       - "traefik.http.routers.${STACK_NAME}.tls=true"
       - "traefik.http.services.${STACK_NAME}.loadbalancer.server.port=80"
       - "traefik.docker.network=proxy"
