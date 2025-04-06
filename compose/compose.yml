@@ -51,6 +51,8 @@ services:
       - MYSQL_DATABASE=${MYSQL_DATABASE:-nextcloud}
       - MYSQL_USER=${MYSQL_USER:-nextcloud}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD:-123456789}
+      - ORG_NAME=${ORG_NAME}
+      - STACK_NAME=${STACK_NAME}
     ports:
       - ${MARIADB_PORT:-6606}:3306  
     volumes:
