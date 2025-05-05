@@ -54,10 +54,12 @@ services:
       - ORG_NAME=${ORG_NAME}
       - STACK_NAME=${STACK_NAME}
     ports:
-      - ${MARIADB_PORT:-6606}:3306  
+      - ${MARIADB_PORT:-6606}:3306
     volumes:
       - ${HOME}/srv/${ORG_NAME}/${STACK_NAME}/mariadb:/config
     restart: unless-stopped
+    networks:
+      - nextcloud
   phpmyadmin:
     image: linuxserver/phpmyadmin
     container_name: ${ORG_NAME}_${STACK_NAME}_phpmyadmin
@@ -67,8 +69,17 @@ services:
       - PMA_PORT=3306
     links:
       - mariadb
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.${STACK_NAME}_pma.entrypoints=websecure"
+      - "traefik.http.routers.${STACK_NAME}_pma.rule=Host(`${PMA_DOMAIN}`)"
+      - "traefik.http.routers.${STACK_NAME}_pma.tls=true"
+      - "traefik.http.services.${STACK_NAME}_pma.loadbalancer.server.port=80"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.${STACK_NAME}_pma.tls.certresolver=letsencrypt"
     ports:
       - ${PMA_HTTP_PORT:-5559}:80
+      - ${PMA_HTTPS_PORT:-5560}:443
     volumes:
       - ${HOME}/srv/${ORG_NAME}/${STACK_NAME}/phpmyadmin:/config
     restart: "no"
