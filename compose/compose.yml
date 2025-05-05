@@ -11,7 +11,7 @@ networks:
     name: proxy
 services:
   nextcloud:
-    image: linuxserver/nextcloud
+    image: linuxserver/nextcloud:27.1.4
     networks:
     - proxy
     - collabora 
