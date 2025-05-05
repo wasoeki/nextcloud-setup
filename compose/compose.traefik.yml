@@ -20,7 +20,7 @@ services:
       - traefik.http.routers.mydashboard.service=api@internal
       - traefik.http.routers.mydashboard.middlewares=myauth
       - traefik.http.middlewares.myauth.basicauth.users=test:$$apr1$$H6uskkkW$$IgXLP6ewTrSuBkTrqE8wj/
-      - "traefik.http.routers.mydashboard.tls.certresolver=letsencrypt"
+      # - traefik.http.routers.mydashboard.tls.certresolver=letsencrypt
     ports:
       # The HTTP port
       - "80:80"
