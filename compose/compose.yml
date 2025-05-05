@@ -73,8 +73,6 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.${STACK_NAME}_pma.entrypoints=websecure"
       - "traefik.http.routers.${STACK_NAME}_pma.rule=Host(`${PMA_DOMAIN}`)"
-      - "traefik.http.routers.${STACK_NAME}_pma.tls=true"
-      - "traefik.http.services.${STACK_NAME}_pma.loadbalancer.server.port=80"
       - "traefik.docker.network=proxy"
       - "traefik.http.routers.${STACK_NAME}_pma.tls.certresolver=letsencrypt"
     ports:
