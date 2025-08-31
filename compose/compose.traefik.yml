@@ -32,4 +32,5 @@ services:
       # So that Traefik can listen to the Docker events
       - /var/run/docker.sock:/var/run/docker.sock
       - ${HOME}/srv/${ORG_NAME}/${STACK_NAME}/git/compose/traefik.yml:/etc/traefik/traefik.yml
+    restart: unless-stopped
 
